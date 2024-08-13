@@ -1,0 +1,16 @@
+{
+    "name": "taks/php-composer-project",
+    "description": "A simple project using composer",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "griyadrs",
+            "email": "maderestu775@gmail.com"
+        }
+    ],
+    "require": {}
+}
