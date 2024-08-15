@@ -1,0 +1,12 @@
+├── src
+│   ├── Controllers
+│   │   ├── ProductCategoryController.php
+│   ├── Libraries
+│   │   ├── Database.php
+│   │   ├── Routing.php
+│   ├── Models
+│   │   ├── ProductCategory.php
+│   ├── index.php
+├── vendor
+├── .htaccess
+└── composer.json
