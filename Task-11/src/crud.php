@@ -9,7 +9,7 @@ $productCategoryModel = new ProductCategory();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    // Validasi dan sanitasi input
+    // Validate and sanitation input
     $validatedData = ValidationException::validate($_POST, [
         'name' => 'string'
     ]);
@@ -29,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         'name' => $validatedData['name']
                     ]);
                 }
+
                 break;
         }
     }
