@@ -37,8 +37,10 @@ class Routing
                 if (is_callable($route['callback'])) {
                     return call_user_func_array($route['callback'], $params);
                 } else {
-                    list($controller, $method) = $route['callback'];
-                    $instance = new $controller();
+                    list($controller, 
+                        $method) = $route['callback'];
+                    $instance    = new $controller();
+                    
                     return $instance->$method(...$params);
                 }
             }

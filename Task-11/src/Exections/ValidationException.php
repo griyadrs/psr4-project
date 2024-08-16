@@ -10,6 +10,7 @@ class ValidationException
      * @param string $input
      * @return string
      */
+    
     public static function sanitizeString(string $input): string
     {
         return htmlspecialchars($input, ENT_QUOTES, 'UTF-8');
@@ -21,11 +22,13 @@ class ValidationException
      * @param mixed $input
      * @return int|null
      */
+
     public static function validateInt($input): ?int
     {
         if (filter_var($input, FILTER_VALIDATE_INT) !== false) {
             return (int) $input;
         }
+        
         return null;
     }
 
@@ -36,6 +39,7 @@ class ValidationException
      * @param string $input
      * @return string
      */
+
     public static function sanitizeForSQL(\mysqli $connection, string $input): string
     {
         return $connection->real_escape_string($input);

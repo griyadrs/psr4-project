@@ -6,10 +6,10 @@ use App\Libraries\Database;
 
 class ProductCategory extends Database {
 
-    protected $table = 'categories';
+    protected string $table = 'categories';
 
     public function findAll() {
-        $sql = "SELECT * FROM {$this->table}";
+        $sql    = "SELECT * FROM {$this->table}";
         $result = $this->connection()->query($sql);
 
         if ($result->num_rows > 0) {
@@ -26,7 +26,7 @@ class ProductCategory extends Database {
     }
 
     public function findOne($id) {
-        $sql = "SELECT * FROM {$this->table} WHERE id = ?";
+        $sql  = "SELECT * FROM {$this->table} WHERE id = ?";
         $stmt =  $this->connection()->prepare($sql);
         $stmt->bind_param("i", $id);
 
@@ -40,7 +40,7 @@ class ProductCategory extends Database {
     }
 
     public function create($data) {
-        $sql = "INSERT INTO {$this->table} (name) VALUES (?)";
+        $sql  = "INSERT INTO {$this->table} (name) VALUES (?)";
         $stmt =  $this->connection()->prepare($sql);
         $stmt->bind_param("s", $data['name']);
 
@@ -52,7 +52,7 @@ class ProductCategory extends Database {
     }
 
     public function update($id, $data) {
-        $sql = "UPDATE {$this->table} SET name = ? WHERE id = ?";
+        $sql  = "UPDATE {$this->table} SET name = ? WHERE id = ?";
         $stmt =  $this->connection()->prepare($sql);
         $stmt->bind_param("si", $data['name'], $id);
 
@@ -65,7 +65,7 @@ class ProductCategory extends Database {
 
     public function delete($id) {
         try {
-            $sql = "DELETE FROM {$this->table} WHERE id = ?";
+            $sql  = "DELETE FROM {$this->table} WHERE id = ?";
             $stmt =  $this->connection()->prepare($sql);
             $stmt->bind_param("i", $id);
             $stmt->execute();

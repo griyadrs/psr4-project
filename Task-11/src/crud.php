@@ -69,22 +69,24 @@ displayData($data);
 <!-- Form for Adding New Item -->
 <h2>Add New Item</h2>
 <form method="POST" action="crud.php?action=add">
-    <label for="name">Name:</label>
-    <input type="text" name="name" id="name" required>
-    <button type="submit">Add</button>
+    <label for   ="name">Name:</label>
+    <input type  ="text" name="name" id="name" required>
+    <button type ="submit">Add</button>
 </form>
 
-<!-- Form for Editing Item (shown only if editing) -->
+<!-- Form for Editing Item -->
 <?php if (isset($_GET['action']) && $_GET['action'] == 'edit') { 
-    $id = ValidationException::validateInt($_GET['id']);
+    $id   = ValidationException::validateInt($_GET['id']);
     $item = $productCategoryModel->findOne($id);
+
     if ($item): ?>
     <h2>Edit Item</h2>
     <form method="POST" action="crud.php?action=update&id=
         <?php echo htmlspecialchars($item['id'], ENT_QUOTES, 'UTF-8'); ?>">
-        <label for="name">Name:</label>
-        <input type="text" name="name" id="name" value="
-            <?php echo htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8'); ?>" required>
+            <label for="update">Name:</label>
+            <input type="text" name="name" id="update" 
+            value="<?php echo htmlspecialchars(
+                $item['name'], ENT_QUOTES, 'UTF-8'); ?>" required>
         <button type="submit">Update</button>
     </form>
 <?php endif; } ?>

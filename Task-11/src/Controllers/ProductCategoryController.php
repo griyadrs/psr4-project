@@ -17,8 +17,7 @@ class ProductCategoryController
 
     public function store()
     {
-        $data = $_POST;
-
+        $data     = $_POST;
         $category = new ProductCategory();
         $response = $category->create($data);
 
@@ -57,5 +56,4 @@ class ProductCategoryController
             'message' => 'success'
         ]); 
     }
-
 }
