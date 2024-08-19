@@ -11,9 +11,10 @@ class ValidationException
      * @return string
      */
     
+    
     public static function sanitizeString(string $input): string
     {
-        return htmlspecialchars($input, ENT_QUOTES, 'UTF-8');
+        return $input;
     }
 
     /**
@@ -26,7 +27,7 @@ class ValidationException
     public static function validateInt($input): ?int
     {
         if (filter_var($input, FILTER_VALIDATE_INT) !== false) {
-            return (int) $input;
+            return $input;
         }
         
         return null;
@@ -55,6 +56,7 @@ class ValidationException
     public static function validate(array $data, array $rules): array
     {
         $validatedData = [];
+        
         foreach ($rules as $key => $rule) {
             if (isset($data[$key])) {
                 switch ($rule) {

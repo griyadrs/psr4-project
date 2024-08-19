@@ -14,11 +14,11 @@ $router->add('GET', '/', function () {
     require 'crud.php';
 });
 
-$router->add('GET', '/product-category', [ProductCategoryController::class, 'index']);
-$router->add('GET', '/product-category/:id', [ProductCategoryController::class, 'show']);
-$router->add('POST', '/product-category', [ProductCategoryController::class, 'store']);
+$router->add('GET',  '/product-category',     [ProductCategoryController::class, 'index']);
+$router->add('GET',  '/product-category/:id', [ProductCategoryController::class, 'show']);
+$router->add('POST', '/product-category',     [ProductCategoryController::class, 'store']);
 $router->add('POST', '/product-category/:id', [ProductCategoryController::class, 'update']);
-$router->add('GET', '/product-category/:id', [ProductCategoryController::class, 'delete']);
+$router->add('GET',  '/product-category/:id', [ProductCategoryController::class, 'delete']);
 
 // Run the router
 echo $router->run();
