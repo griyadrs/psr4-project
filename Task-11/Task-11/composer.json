@@ -1,0 +1,10 @@
+{
+    "name": "v3dsr4/jengga004",
+    "description": "Make a simple project with composer",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "require": {}
+}
