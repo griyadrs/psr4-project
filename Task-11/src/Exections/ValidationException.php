@@ -1,79 +1,38 @@
 <?php
 
-namespace App\Exections;
+namespace App\Exceptions;
 
-class ValidationException
+class ValidationException extends \Exception
 {
-    /**
-     * Sanitize string input to prevent XSS.
-     * 
-     * @param string $input
-     * @return string
-     */
-    
-    
-    public static function sanitizeString(string $input): string
+    public static function checkErrors(array $data, array $rules)
     {
-        return $input;
-    }
+        foreach ($rules as $field => $ruleSet) {
+            $value = $data[$field] ?? null;
 
-    /**
-     * Validate integer input.
-     * 
-     * @param mixed $input
-     * @return int|null
-     */
-
-    public static function validateInt($input): ?int
-    {
-        if (filter_var($input, FILTER_VALIDATE_INT) !== false) {
-            return $input;
-        }
-        
-        return null;
-    }
-
-    /**
-     * Validate string input for SQL Injection protection.
-     * 
-     * @param \mysqli $connection
-     * @param string $input
-     * @return string
-     */
-
-    public static function sanitizeForSQL(\mysqli $connection, string $input): string
-    {
-        return $connection->real_escape_string($input);
-    }
-
-    /**
-     * Validate and sanitize data array.
-     * 
-     * @param array $data
-     * @param array $rules
-     * @return array
-     */
-    public static function validate(array $data, array $rules): array
-    {
-        $validatedData = [];
-        
-        foreach ($rules as $key => $rule) {
-            if (isset($data[$key])) {
+            foreach ($ruleSet as $rule) {
                 switch ($rule) {
+                    case 'required':
+                        if (is_null($value) || $value === '') {
+                            throw new ValidationException("The {$field} field is required.");
+                        }
+
+                        break;
                     case 'string':
-                        $validatedData[$key] = self::sanitizeString($data[$key]);
-                        break;
+                        if (!is_string($value)) {
+                            throw new ValidationException("The {$field} field must be a string.");
+                        }
 
+                        break;
                     case 'int':
-                        $validatedData[$key] = self::validateInt($data[$key]);
-                        break;
+                        if (!is_int($value) && !ctype_digit($value)) {
+                            throw new ValidationException("The {$field} field must be an integer.");
+                        }
 
+                        break;
                     default:
-                        throw new \Exception("Validation rule '{$rule}' is not supported.");
+                        throw new ValidationException("The validation rule '{$rule}' is not supported.");
                 }
             }
         }
-        
-        return $validatedData;
     }
 }

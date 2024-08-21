@@ -4,11 +4,12 @@ namespace App\Models;
 
 use App\Libraries\Database;
 
-class ProductCategory extends Database {
-
+class ProductCategory extends Database 
+{
     protected string $table = 'categories';
 
-    public function findAll() {
+    public function findAll() 
+    {
         $sql    = "SELECT * FROM {$this->table}";
         $result = $this->connection()->query($sql);
 
@@ -25,7 +26,8 @@ class ProductCategory extends Database {
         return [];
     }
 
-    public function findOne($id) {
+    public function findOne($id) 
+    {
         $sql  = "SELECT * FROM {$this->table} WHERE id = ?";
         $stmt =  $this->connection()->prepare($sql);
         $stmt->bind_param("i", $id);
@@ -39,7 +41,8 @@ class ProductCategory extends Database {
         return [];
     }
 
-    public function create($data) {
+    public function create($data) 
+    {
         $sql  = "INSERT INTO {$this->table} (name) VALUES (?)";
         $stmt =  $this->connection()->prepare($sql);
         $stmt->bind_param("s", $data['name']);
@@ -51,7 +54,8 @@ class ProductCategory extends Database {
         return [];
     }
 
-    public function update($id, $data) {
+    public function update($id, $data) 
+    {
         $sql  = "UPDATE {$this->table} SET name = ? WHERE id = ?";
         $stmt =  $this->connection()->prepare($sql);
         $stmt->bind_param("si", $data['name'], $id);
@@ -63,14 +67,16 @@ class ProductCategory extends Database {
         return [];
     }
 
-    public function delete($id) {
+    public function delete($id) 
+    {
         try {
             $sql  = "DELETE FROM {$this->table} WHERE id = ?";
             $stmt =  $this->connection()->prepare($sql);
             $stmt->bind_param("i", $id);
+
             $stmt->execute();
         } catch (\Throwable $th) {
-            throw $th;
+            throw new \Exception("Delete Failed: " . $th->getMessage());
         }
     }
 }

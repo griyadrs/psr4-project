@@ -3,14 +3,14 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Models\ProductCategory;
-use App\Exections\ValidationException;
+use App\Libraries\Validation;
 
 $productCategoryModel = new ProductCategory();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    // Validate and sanitation input
-    $validatedData = ValidationException::validate($_POST, [
+    // Validate and sanitize input
+    $validatedData = Validation::validate($_POST, [
         'name' => 'string'
     ]);
 
@@ -20,10 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $productCategoryModel->create([
                     'name' => $validatedData['name']
                 ]);
-                break;
 
+                break;
             case 'update':
-                $id = ValidationException::validateInt($_GET['id']);
+                $id = Validation::validateInt($_GET['id']);
                 if ($id !== null) {
                     $productCategoryModel->update($id, [
                         'name' => $validatedData['name']
@@ -33,9 +33,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 break;
         }
     }
-} elseif ($_SERVER['REQUEST_METHOD'] == 'GET' &&
-    isset($_GET['action']) && $_GET['action'] == 'delete') {
-    $id = ValidationException::validateInt($_GET['id']);
+} elseif (
+    $_SERVER['REQUEST_METHOD'] == 'GET' &&
+    isset($_GET['action']) && $_GET['action'] == 'delete'
+) {
+    $id = Validation::validateInt($_GET['id']);
     if ($id !== null) {
         $productCategoryModel->delete($id);
     }
@@ -54,10 +56,10 @@ function displayData($data)
         echo "<td>" . htmlspecialchars($item['created_at'], ENT_QUOTES, 'UTF-8') . "</td>";
         echo "<td>" . htmlspecialchars($item['updated_at'], ENT_QUOTES, 'UTF-8') . "</td>";
         echo "<td> 
-            <a href='crud.php?action=edit&id=" . 
-                htmlspecialchars($item['id'], ENT_QUOTES, 'UTF-8') . "'>Edit</a> | 
+            <a href='crud.php?action=edit&id=" .
+            htmlspecialchars($item['id'], ENT_QUOTES, 'UTF-8') . "'>Edit</a> | 
             <a href='crud.php?action=delete&id=" .
-                htmlspecialchars($item['id'], ENT_QUOTES, 'UTF-8') . "'>Delete</a> </td>";
+            htmlspecialchars($item['id'], ENT_QUOTES, 'UTF-8') . "'>Delete</a> </td>";
         echo "</tr>";
     }
     echo "</table>";
@@ -69,24 +71,27 @@ displayData($data);
 <!-- Form for Adding New Item -->
 <h2>Add New Item</h2>
 <form method="POST" action="crud.php?action=add">
-    <label for   ="name">Name:</label>
-    <input type  ="text" name="name" id="name" required>
-    <button type ="submit">Add</button>
+    <label for="name">Name:</label>
+    <input type="text" name="name" id="name" required>
+    <button type="submit">Add</button>
 </form>
 
 <!-- Form for Editing Item -->
-<?php if (isset($_GET['action']) && $_GET['action'] == 'edit') { 
-    $id   = ValidationException::validateInt($_GET['id']);
+<?php if (isset($_GET['action']) && $_GET['action'] == 'edit') {
+    $id = Validation::validateInt($_GET['id']);
     $item = $productCategoryModel->findOne($id);
 
     if ($item): ?>
-    <h2>Edit Item</h2>
-    <form method="POST" action="crud.php?action=update&id=
+        <h2>Edit Item</h2>
+        <form method="POST" action="crud.php?action=update&id=
         <?php echo htmlspecialchars($item['id'], ENT_QUOTES, 'UTF-8'); ?>">
             <label for="update">Name:</label>
-            <input type="text" name="name" id="update" 
-            value="<?php echo htmlspecialchars(
-                $item['name'], ENT_QUOTES, 'UTF-8'); ?>" required>
-        <button type="submit">Update</button>
-    </form>
-<?php endif; } ?>
+            <input type="text" name="name" id="update" value="<?php echo htmlspecialchars(
+                $item['name'],
+                ENT_QUOTES,
+                'UTF-8'
+            ); ?>" required>
+            <button type="submit">Update</button>
+        </form>
+    <?php endif;
+} ?>

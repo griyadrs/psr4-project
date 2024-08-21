@@ -1,19 +1,20 @@
-
+<?php
 
 namespace App\Libraries;
 
-use App\Exections\ValidationException;
+use App\Exceptions\ValidationException;
 
-class Request 
+class Request
 {
-    protected string $method, $uri;
-    protected array $inputs = [];
+    private string 
+        $method = '',
+        $uri    = '';
+    private array $inputs = [];
 
     public function __construct()
     {
         $this->setMethod($_SERVER['REQUEST_METHOD']);
         $this->setUri($_SERVER['REQUEST_URI']);
-        
         $this->handleInput();
     }
 
@@ -22,12 +23,12 @@ class Request
         switch ($this->getMethod()) {
             case 'GET':
                 $this->setInputs($_GET);
+                
                 break;
-
             case 'POST':
                 $this->setInputs($_POST);
+
                 break;
-            
             default:
                 break;
         }
@@ -68,13 +69,12 @@ class Request
         return $this->uri;
     }
 
-    public function validate(array $rules)
+    public function validate(array $data, array $rules)
     {
         try {
-            $this->inputs = ValidationException::validate($this->inputs, $rules);
-        } catch (\Exception $e) {
-            throw new ValidationException($e->getMessage());
+            return Validation::validate($data, $rules);
+        } catch (ValidationException $e) {
+            throw $e;
         }
     }
-
 }

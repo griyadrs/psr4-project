@@ -2,15 +2,17 @@
 
 namespace App\Libraries;
 
-class Database {
+class Database 
+{
     private string
         $host     = 'localhost',
         $username = 'root',
         $password = '',
         $database = 'demo_intern';
-    private   \mysqli $connection;
+    private \mysqli $connection;
 
-    public function __construct() {
+    public function __construct() 
+    {
         $connect = new \mysqli(
             $this->host,
             $this->username,
@@ -19,13 +21,14 @@ class Database {
         );
 
         if ($connect->connect_error) {
-            die("Koneksi gagal:  {$connect->connect_error}");
+            die("Koneksi gagal: {$connect->connect_error}");
         }
 
         $this->connection = $connect;
     }
 
-    public function connection() {
+    public function connection() 
+    {
         return $this->connection;
     }
 }

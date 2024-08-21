@@ -2,58 +2,109 @@
 
 namespace App\Controllers;
 
+use App\Libraries\Request;
+use App\Libraries\Validation;
 use App\Models\ProductCategory;
+use App\Exceptions\ValidationException;
 
 class ProductCategoryController
 {
+    private $productCategoryModel;
+
+    public function __construct()
+    {
+        $this->productCategoryModel = new ProductCategory();
+    }
+
     public function index()
     {
-        $categories = (new ProductCategory)->findAll();
+        try {
+            $categories = $this->productCategoryModel->findAll();
 
-        return json_encode([
-            'data' => $categories
-        ]);
+            return json_encode(['data' => $categories]);
+        } catch (ValidationException $e) {
+            $this->handleError($e);
+            
+            return json_encode(['error' => 'Unable to fetch categories.']);
+        }
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        $data     = $_POST;
-        $category = new ProductCategory();
-        $response = $category->create($data);
+        try {
+            $request->validate($request->allInput(), [
+                'name' => ['required', 'string']
+            ]);
+            $data     = $request->allInput();
+            $response = $this->productCategoryModel->create($data);
 
-        return json_encode([
-            'data' => $response
-        ]);
+            return json_encode(['data' => $response]);
+        } catch (ValidationException $e) {
+            $this->handleError($e);
+
+            return json_encode(['error' => 'Unable to create category.']);
+        }
     }
 
-    public function show($id)
+    public function show(int $id)
     {
-        $category = (new ProductCategory)->findOne($id);
+        try {
+            $validatedId = Validation::validateInt($id);
+            $category    = $this->productCategoryModel->findOne($validatedId);
 
-        return json_encode([
-            'data' => $category
-        ]);
+            return json_encode(['data' => $category]);
+        } catch (ValidationException $e) {
+            $this->handleError($e);
+
+            return json_encode(['error' => 'Unable to fetch category.']);
+        }
     }
 
-    public function update($id)
+    public function update(Request $request, $id)
     {
-        $data = $_POST;
+        try {
+            $validatedId = Validation::validateInt($id);
 
-        $category = new ProductCategory();
-        $response = $category->update($id, $data);
+            // if ($validatedId == null) {
+            //     throw new Validation('Invalid ID provided.');
+            // }
 
-        return json_encode([
-            'data' => $response
-        ]);
+            $request->validate($request->allInput(), [
+                'name' => ['required', 'string']
+            ]);
+            $data     = $request->allInput();
+            $response = $this->productCategoryModel->update($validatedId, $data);
+
+            return json_encode(['data' => $response]);
+        } catch (ValidationException $e) {
+            $this->handleError($e);
+            
+            return json_encode(['error' => 'Unable to update category.']);
+        }
     }
 
-    public function delete($id)
+    public function delete(int $id)
     {
-        $category = new ProductCategory();
-        $category->delete($id);
+        try {
+            $validatedId = Validation::validateInt($id);
 
-        return json_encode([
-            'message' => 'success'
-        ]); 
+            // if ($validatedId === null) {
+            //     throw new Validation('Invalid ID provided.');
+            // }
+
+            $this->productCategoryModel->delete($validatedId);
+
+            return json_encode(['message' => 'Category deleted successfully.']);
+
+        } catch (ValidationException $e) {
+            $this->handleError($e);
+            
+            return json_encode(['error' => 'Unable to delete category.']);
+        }
+    }
+
+    protected function handleError(ValidationException $e)
+    {
+        error_log($e->getMessage());
     }
 }
