@@ -23,14 +23,15 @@ class Request
         switch ($this->getMethod()) {
             case 'GET':
                 $this->setInputs($_GET);
-                
                 break;
+            
             case 'POST':
                 $this->setInputs($_POST);
-
                 break;
+            
             default:
                 break;
+            
         }
     }
 
